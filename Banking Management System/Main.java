@@ -1,200 +1,204 @@
-import java.util.*;
+import java.util.Scanner;
 
-class User {
-
-    // Private variables - Encapsulation
-    private int accNumber;
-    private String username;
-    private String phno;
-    private double balance;
-    private String address;
-
-    // Constructor
-    public User(int accNumber, String username, String phno,
-                double balance, String address) {
-
-        this.accNumber = accNumber;
-        this.username = username;
-        this.phno = phno;
-        this.balance = balance;
-        this.address = address;
-    }
-
-    // Getter for account number
-    public int getAccNumber() {
-        return accNumber;
-    }
-
-    // Setter for account number
-    public void setAccNumber(int accNumber) {
-        this.accNumber = accNumber;
-    }
-
-    // Getter for username
-    public String getUsername() {
-        return username;
-    }
-
-    // Setter for username
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    // Getter for phone number
-    public String getPhno() {
-        return phno;
-    }
-
-    // Setter for phone number
-    public void setPhno(String phno) {
-        this.phno = phno;
-    }
-
-    // Getter for balance
-    public double getBalance() {
-        return balance;
-    }
-
-    // Setter for balance
-    public void setBalance(double balance) {
-        this.balance = balance;
-    }
-
-    // Getter for address
-    public String getAddress() {
-        return address;
-    }
-
-    // Setter for address
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    // Display user details
-    public void displayAccount() {
-
-        System.out.println("ACCOUNT NUMBER : " + accNumber);
-        System.out.println("USERNAME       : " + username);
-        System.out.println("PHONE NUMBER   : " + phno);
-        System.out.println("BALANCE        : " + balance);
-        System.out.println("ADDRESS        : " + address);
-    }
-}
-
-
-// Database class
-class Database {
-
-    private Map<Integer, User> users = new HashMap<>();
-
-    // Add user
-    public void addUser(User user) {
-        users.put(user.getAccNumber(), user);
-    }
-
-    // View account
-    public void viewAccount(int accNumber) {
-
-        User user = users.get(accNumber);
-
-        if (user != null) {
-            user.displayAccount();
-        }
-        else {
-            System.out.println("USER NOT FOUND");
-        }
-    }
-}
-
-
-// Main class
-public class Main {
+public class BankingManagementSystem {
 
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
 
-        Database db = new Database();
+        BankAccount account = null;
+        Customer customer = null;
 
-        int accNumber = 1000;
-
-        boolean running = true;
-
-        while (running) {
+        while (true) {
 
             System.out.println("\n=================================");
-            System.out.println("          BANKING SYSTEM");
-            System.out.println("=================================");
-            System.out.println("1. ADD ACCOUNT");
-            System.out.println("2. VIEW ACCOUNT");
-            System.out.println("3. EXIT");
+            System.out.println("   BANKING MANAGEMENT SYSTEM");
             System.out.println("=================================");
 
-            System.out.print("ENTER YOUR CHOICE : ");
+            System.out.println("1. Create Account");
+            System.out.println("2. Display Account Details");
+            System.out.println("3. Deposit Money");
+            System.out.println("4. Withdraw Money");
+            System.out.println("5. Check Balance");
+            System.out.println("6. Update Account Details");
+            System.out.println("7. Exit");
+
+            System.out.print("Enter your choice: ");
             int choice = sc.nextInt();
-            sc.nextLine();
 
             switch (choice) {
 
+                // Create Account
                 case 1:
 
-                    accNumber++;
+                    if (customer != null) {
+                        System.out.println("Account already exists.");
+                        break;
+                    }
 
-                    System.out.print("ENTER YOUR NAME : ");
-                    String username = sc.nextLine();
+                    System.out.print("Enter account number: ");
+                    int accountNumber = sc.nextInt();
 
-                    System.out.print("ENTER YOUR PHONE NUMBER : ");
-                    String phno = sc.nextLine();
-
-                    System.out.print("ENTER YOUR BALANCE : ");
-                    double balance = sc.nextDouble();
                     sc.nextLine();
 
-                    System.out.print("ENTER YOUR ADDRESS : ");
+                    System.out.print("Enter customer name: ");
+                    String name = sc.nextLine();
+
+                    System.out.print("Enter phone number: ");
+                    String phone = sc.nextLine();
+
+                    System.out.print("Enter address: ");
                     String address = sc.nextLine();
 
-                    User user = new User(
-                            accNumber,
-                            username,
-                            phno,
-                            balance,
-                            address
+                    account = new BankAccount(accountNumber);
+
+                    customer = new Customer(
+                            name,
+                            phone,
+                            address,
+                            account
                     );
 
-                    db.addUser(user);
-
-                    System.out.println("\nACCOUNT CREATED SUCCESSFULLY!");
-                    System.out.println("YOUR ACCOUNT NUMBER : " + accNumber);
+                    System.out.println(
+                            "Account created successfully."
+                    );
 
                     break;
 
 
+                // Display Account
                 case 2:
 
-                    System.out.print("ENTER ACCOUNT NUMBER : ");
-                    int an = sc.nextInt();
-
-                    System.out.println();
-
-                    db.viewAccount(an);
+                    if (customer == null) {
+                        System.out.println(
+                                "Please create an account first."
+                        );
+                    }
+                    else {
+                        customer.displayDetails();
+                    }
 
                     break;
 
 
+                // Deposit
                 case 3:
 
-                    System.out.println("THANK YOU!");
-                    running = false;
+                    if (account == null) {
+                        System.out.println(
+                                "Please create an account first."
+                        );
+                    }
+                    else {
+
+                        System.out.print(
+                                "Enter amount to deposit: "
+                        );
+
+                        double depositAmount = sc.nextDouble();
+
+                        account.deposit(depositAmount);
+                    }
 
                     break;
 
 
+                // Withdraw
+                case 4:
+
+                    if (account == null) {
+                        System.out.println(
+                                "Please create an account first."
+                        );
+                    }
+                    else {
+
+                        System.out.print(
+                                "Enter amount to withdraw: "
+                        );
+
+                        double withdrawAmount = sc.nextDouble();
+
+                        account.withdraw(withdrawAmount);
+                    }
+
+                    break;
+
+
+                // Check Balance
+                case 5:
+
+                    if (account == null) {
+                        System.out.println(
+                                "Please create an account first."
+                        );
+                    }
+                    else {
+
+                        System.out.println(
+                                "Current Balance: "
+                                + account.getBalance()
+                        );
+                    }
+
+                    break;
+
+
+                // Update Account
+                case 6:
+
+                    if (customer == null) {
+
+                        System.out.println(
+                                "Please create an account first."
+                        );
+                    }
+                    else {
+
+                        sc.nextLine();
+
+                        System.out.print(
+                                "Enter new phone number: "
+                        );
+
+                        String newPhone = sc.nextLine();
+
+                        System.out.print(
+                                "Enter new address: "
+                        );
+
+                        String newAddress = sc.nextLine();
+
+                        customer.setPhone(newPhone);
+                        customer.setAddress(newAddress);
+
+                        System.out.println(
+                                "Account details updated successfully."
+                        );
+                    }
+
+                    break;
+
+
+                // Exit
+                case 7:
+
+                    System.out.println(
+                            "Thank you for using Banking Management System."
+                    );
+
+                    sc.close();
+
+                    return;
+
+
+                // Invalid choice
                 default:
 
-                    System.out.println("INVALID CHOICE!");
+                    System.out.println(
+                            "Invalid choice. Please try again."
+                    );
             }
         }
-
-        sc.close();
     }
 }
